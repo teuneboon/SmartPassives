@@ -35,9 +35,9 @@ public class TestTree extends Tree {
         testNode5.connect(testNode11);
 
         testNode2.connect(testNode8);
-        testNode2.connect(testNode9);
-        testNode2.connect(testNode10);
-        testNode2.connect(testNode11);
+        testNode8.connect(testNode9);
+        testNode9.connect(testNode10);
+        testNode9.connect(testNode11);
 
         // ugly now cause I'm lazy
         Node[] nodes = {testNode, testNode2, testNode3, testNode4, testNode5, testNode6, testNode7, testNode8, testNode9, testNode10, testNode11};
