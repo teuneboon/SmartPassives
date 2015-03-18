@@ -12,12 +12,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PassiveTreeFItnessFunction extends FitnessFunction {
+public class PassiveTreeFitnessFunction extends FitnessFunction {
     private HashMap<String, Integer> targetStats;
     private Tree tree;
     private String _class; // eventually we want to calculate best class
 
-    public PassiveTreeFItnessFunction(Tree tree, HashMap<String, Integer> targetStats, String _class) {
+    public PassiveTreeFitnessFunction(Tree tree, HashMap<String, Integer> targetStats, String _class) {
         this.targetStats = targetStats;
         this.tree = tree;
         this._class = _class;
