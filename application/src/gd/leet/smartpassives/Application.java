@@ -3,10 +3,13 @@ package gd.leet.smartpassives;
 import gd.leet.smartpassives.model.TestTree;
 import gd.leet.smartpassives.model.Tree;
 import org.jgap.*;
+import org.jgap.event.GeneticEvent;
+import org.jgap.event.GeneticEventListener;
 import org.jgap.impl.DefaultConfiguration;
 import org.jgap.impl.IntegerGene;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 public class Application {
@@ -15,7 +18,31 @@ public class Application {
     public double BASE_MUTATION_RATE = 5;
     int STAGNATION_LIMIT_MIN = 50;
 
+    public Double bestScore = (double) 0;
+    public Double waterMark = (double) 0;
+    public static Double[] bestScores;
+    public static Integer[] evolutionsSinceDiscovery ;
+    public Integer stagnationLimit = 0;
+    private boolean newbestscore = false;
+    private boolean firstrun = true;
+
     public void run() throws Exception {
+        bestScore = (double) 0;
+        bestScores = new Double[1];
+        evolutionsSinceDiscovery = new Integer[1];
+        spawn(0);
+
+//        for (int i = 0; i < 100; ++i) {
+//            population.evolve();
+//            IChromosome fittest = population.getFittestChromosome();
+//            System.out.println(fittest.getFitnessValue());
+//            System.out.println(PassiveTreeFitnessFunction.extractValidNodes(fittest, test, "witch"));
+//        }
+    }
+
+    private void spawn(final int threadIndex) throws InvalidConfigurationException {
+        bestScores[threadIndex] = (double) 0;
+
         Tree test = new TestTree();
         test.fill();
 
@@ -25,12 +52,127 @@ public class Application {
         final PassiveTreeFitnessFunction fitnessFunction = new PassiveTreeFitnessFunction(test, targetStats, "witch");
         final Configuration conf = constructConfiguration(fitnessFunction, test);
         final Genotype population = Genotype.randomInitialGenotype(conf);
-        for (int i = 0; i < 100; ++i) {
-            population.evolve();
-            IChromosome fittest = population.getFittestChromosome();
-            System.out.println(fittest.getFitnessValue());
-            System.out.println(PassiveTreeFitnessFunction.extractValidNodes(fittest, test, "witch"));
+
+        if (firstrun) {
+            firstrun = false;
+        } else {
+
         }
+
+        final Thread thread = new Thread(population);
+
+        conf.getEventManager().addEventListener(GeneticEvent.GENOTYPE_EVOLVED_EVENT, new GeneticEventListener()
+        {
+            @Override
+            public void geneticEventFired(GeneticEvent a_firedEvent)
+            {
+                Collections.shuffle(conf.getGeneticOperators());
+                BASE_MUTATION_RATE += .001;
+                if (BASE_MUTATION_RATE >= CHROMOSOME_LENGTH / 2)
+                    BASE_MUTATION_RATE = 1;
+                IChromosome fittestChromosome = population.getFittestChromosome();
+                double fitnessValue = fittestChromosome.getFitnessValue();
+                if (fitnessValue > bestScores[threadIndex])
+                {
+                    bestScores[threadIndex] = fitnessValue;
+                    evolutionsSinceDiscovery[threadIndex] = 0;
+                    BASE_MUTATION_RATE = 1;
+                }
+                else
+                    evolutionsSinceDiscovery[threadIndex]++;
+
+                int highestevosSinceDiscovery = 0;
+                for(int i = 0; i < bestScores.length; i++ )
+                {
+                    if(bestScores[i] >= bestScore)
+                    {
+                        if(evolutionsSinceDiscovery[i] > highestevosSinceDiscovery)
+                            highestevosSinceDiscovery = evolutionsSinceDiscovery[i];
+                    }
+                }
+
+                stagnationLimit = (int)Math.ceil(highestevosSinceDiscovery * (.5));
+
+                if(fitnessValue < bestScore)
+                {
+                    if (evolutionsSinceDiscovery[threadIndex] > Math.max(stagnationLimit, STAGNATION_LIMIT_MIN) && fitnessValue < waterMark)
+                    {
+                        //Stagnation. Suicide village and try again.
+                        System.out.println("Restarting thread " + threadIndex);
+                        try {
+                            spawn(threadIndex);
+                        }
+                        catch (InvalidConfigurationException e)
+                        {
+                            e.printStackTrace();
+                        }
+                        thread.interrupt();
+                    }
+                    else if(evolutionsSinceDiscovery[threadIndex] > Math.max(stagnationLimit, STAGNATION_LIMIT_MIN) * 3)
+                    {
+                        //Stagnation. Suicide village and try again.
+                        System.out.println("Restarting thread " + threadIndex);
+                        try {
+                            spawn(threadIndex);
+                        }
+                        catch (InvalidConfigurationException e)
+                        {
+                            e.printStackTrace();
+                        }
+                        thread.interrupt();
+                    }
+                }
+                else if (evolutionsSinceDiscovery[threadIndex] > Math.max(stagnationLimit, STAGNATION_LIMIT_MIN))
+                {
+                    if(newbestscore)
+                    {
+                        waterMark = fitnessValue;
+                    }
+
+                    int totalevoSinceDiscoveryOnBest = 0;
+                    int numBestThreads = 0;
+
+                    for(int i = 0; i < bestScores.length; i++ )
+                    {
+                        if(bestScores[i] >= bestScore)
+                        {
+                            numBestThreads++;
+                            totalevoSinceDiscoveryOnBest += evolutionsSinceDiscovery[i];
+                        }
+                    }
+
+                    if(totalevoSinceDiscoveryOnBest > Math.max(stagnationLimit, STAGNATION_LIMIT_MIN) * 3 * numBestThreads)
+                    {
+                        // Deadlock, open this thread.
+                        System.out.println("Restarting thread " + threadIndex);
+                        try
+                        {
+                            spawn(threadIndex);
+                        }
+                        catch (InvalidConfigurationException e)
+                        {
+                            e.printStackTrace();
+                        }
+                        thread.interrupt();
+                    }
+                }
+
+                synchronized (bestScore)
+                {
+                    if (fitnessValue > bestScore)
+                    {
+                        BASE_MUTATION_RATE = 1;
+                        bestScore = fitnessValue;
+                        newbestscore = true;
+
+                        displayChromosome(fittestChromosome);
+                    }
+                }
+            }
+
+        });
+        thread.setPriority(Thread.MIN_PRIORITY);
+        thread.start();
     }
 
     public static void main(String[] args) {
@@ -39,6 +181,14 @@ public class Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void displayChromosome(IChromosome fittest) {
+        Tree test = new TestTree();
+        test.fill();
+
+        System.out.println(fittest.getFitnessValue());
+        System.out.println(PassiveTreeFitnessFunction.extractValidNodes(fittest, test, "witch"));
     }
 
     private Configuration constructConfiguration(PassiveTreeFitnessFunction fitnessFunc, Tree tree) throws InvalidConfigurationException {

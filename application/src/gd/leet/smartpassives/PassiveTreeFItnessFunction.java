@@ -25,26 +25,27 @@ public class PassiveTreeFitnessFunction extends FitnessFunction {
 
     protected double evaluate(IChromosome iChromosome) {
         double fitness = this.percentageOfStats(iChromosome);
-        return 0;
+
+        return fitness;
     }
 
-    private List<Node> getActionsInOrder(IChromosome iChromosome) {
+    public static List<Node> getActionsInOrder(IChromosome iChromosome, Tree tree) {
         List<Node> nodes = new ArrayList<Node>();
         for (Gene gene1 : iChromosome.getGenes()) {
             IntegerGene gene = (IntegerGene) gene1;
             Integer passiveId = (Integer) gene.getAllele();
-            nodes.add(this.tree.getNodeMap().get(passiveId));
+            nodes.add(tree.getNodeMap().get(passiveId));
         }
         return nodes;
     }
 
-    private List<Node> extractValidNodes(IChromosome iChromosome) {
+    public static List<Node> extractValidNodes(IChromosome iChromosome, Tree tree, String _class) {
         List<Node> nodes = new ArrayList<Node>();
-        List<Node> nodesToConsider = this.getActionsInOrder(iChromosome);
+        List<Node> nodesToConsider = PassiveTreeFitnessFunction.getActionsInOrder(iChromosome, tree);
         for (Node node : nodesToConsider) {
             if (nodes.size() == 0) {
                 // we are looking for starting node
-                if (this.tree.getStartNodesForClass(this._class).contains(node)) {
+                if (tree.getStartNodesForClass(_class).contains(node)) {
                     nodes.add(node);
                 }
             } else {
@@ -74,7 +75,7 @@ public class PassiveTreeFitnessFunction extends FitnessFunction {
     }
 
     private double percentageOfStats(IChromosome iChromosome) {
-        HashMap<String, Integer> stats = this.getStats(this.extractValidNodes(iChromosome));
+        HashMap<String, Integer> stats = this.getStats(PassiveTreeFitnessFunction.extractValidNodes(iChromosome, this.tree, this._class));
         double[] percentages = new double[this.targetStats.size()];
         int i = 0;
         for (Map.Entry<String, Integer> entry : this.targetStats.entrySet()) {
@@ -82,11 +83,11 @@ public class PassiveTreeFitnessFunction extends FitnessFunction {
             if (stats.containsKey(entry.getKey())) {
                 value = stats.get(entry.getKey());
             }
-            double percentage = (double)entry.getValue()/(double)value;
+            double percentage = (double)value/(double)entry.getValue();
             if (percentage > 1) {
                 percentage = 1;
             }
-            percentages[++i] = percentage;
+            percentages[i++] = percentage;
         }
         double sum = 0;
         for (double a : percentages) {
