@@ -1,22 +1,31 @@
 package gd.leet.smartpassives.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class Node {
     private List<Node> connections;
     private HashMap<String, Integer> stats;
+    private String name;
 
-    public Node() {
+    private void __init_stats() {
         this.stats = new HashMap<String, Integer>();
     }
 
-    public Node(HashMap<String, Integer> stats) {
-        this.stats = stats;
+    private void __init_connections() {
+        this.connections = new ArrayList<Node>();
+    }
+
+    public Node(String name) {
+        this.name = name;
     }
 
     public List<Node> getConnections() {
-        return connections;
+        if (this.connections == null) {
+            this.__init_connections();
+        }
+        return this.connections;
     }
 
     public void setConnections(List<Node> connections) {
@@ -24,7 +33,10 @@ public class Node {
     }
 
     public HashMap<String, Integer> getStats() {
-        return stats;
+        if (this.stats == null) {
+            this.__init_stats();
+        }
+        return this.stats;
     }
 
     public void setStats(HashMap<String, Integer> stats) {
@@ -32,7 +44,19 @@ public class Node {
     }
 
     public void connect(Node node) {
-        this.connections.add(node);
+        this.getConnections().add(node);
         node.getConnections().add(this);
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String toString() {
+        return this.getName();
     }
 }

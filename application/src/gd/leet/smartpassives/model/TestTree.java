@@ -4,27 +4,27 @@ import java.util.Arrays;
 
 public class TestTree extends Tree {
     public void fill() {
-        Node testNode = new Node();
+        Node testNode = new Node("strength 1");
         testNode.getStats().put("strength", 10);
-        Node testNode2 = new Node();
+        Node testNode2 = new Node("intelligence 1");
         testNode2.getStats().put("intelligence", 10);
-        Node testNode3 = new Node();
+        Node testNode3 = new Node("intelligence 2");
         testNode3.getStats().put("intelligence", 10);
-        Node testNode4 = new Node();
+        Node testNode4 = new Node("intelligence 3");
         testNode4.getStats().put("intelligence", 10);
-        Node testNode5 = new Node();
+        Node testNode5 = new Node("intelligence 4");
         testNode5.getStats().put("intelligence", 10);
-        Node testNode6 = new Node();
+        Node testNode6 = new Node("intelligence 5");
         testNode6.getStats().put("intelligence", 10);
-        Node testNode7 = new Node();
+        Node testNode7 = new Node("strength 2");
         testNode7.getStats().put("strength", 10);
-        Node testNode8 = new Node();
+        Node testNode8 = new Node("strength 3");
         testNode8.getStats().put("strength", 10);
-        Node testNode9 = new Node();
+        Node testNode9 = new Node("dexterity 2");
         testNode9.getStats().put("dexterity", 10);
-        Node testNode10 = new Node();
+        Node testNode10 = new Node("superint 1");
         testNode10.getStats().put("intelligence", 30);
-        Node testNode11 = new Node();
+        Node testNode11 = new Node("superstr 1");
         testNode11.getStats().put("strength", 30);
 
         testNode.connect(testNode3);
