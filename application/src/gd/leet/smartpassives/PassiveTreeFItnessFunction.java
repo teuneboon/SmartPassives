@@ -43,11 +43,9 @@ public class PassiveTreeFitnessFunction extends FitnessFunction {
         List<Node> nodes = new ArrayList<Node>();
         List<Node> nodesToConsider = PassiveTreeFitnessFunction.getActionsInOrder(iChromosome, tree);
         for (Node node : nodesToConsider) {
-            if (nodes.size() == 0) {
-                // we are looking for starting node
-                if (tree.getStartNodesForClass(_class).contains(node) && !nodes.contains(node)) {
-                    nodes.add(node);
-                }
+            // we are looking for starting node
+            if (tree.getStartNodesForClass(_class).contains(node) && !nodes.contains(node)) {
+                nodes.add(node);
             } else {
                 for (Node node2 : nodes) {
                     if (node2.getConnections().contains(node) && !nodes.contains(node)) {

@@ -50,6 +50,7 @@ public class Application {
         targetStats.put("Intelligence", 30);
         targetStats.put("% increased Cast Speed", 6);
         targetStats.put("% increased Spell Damage", 40);
+        targetStats.put("% increased maximum Mana", 8);
         final PassiveTreeFitnessFunction fitnessFunction = new PassiveTreeFitnessFunction(test, targetStats, "witch");
         final Configuration conf = constructConfiguration(fitnessFunction, test);
         final Genotype population = Genotype.randomInitialGenotype(conf);
