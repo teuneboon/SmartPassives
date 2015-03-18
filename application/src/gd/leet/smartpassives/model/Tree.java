@@ -24,4 +24,8 @@ public abstract class Tree {
     public void setNodeMap(HashMap<Integer, Node> nodeMap) {
         this.nodeMap = nodeMap;
     }
+
+    protected void connect(int id1, int id2) {
+        this.getNodeMap().get(id1).connect(this.getNodeMap().get(id2));
+    }
 }

@@ -24,8 +24,8 @@ public class PassiveTreeFitnessFunction extends FitnessFunction {
     }
 
     protected double evaluate(IChromosome iChromosome) {
-        double fitness = this.percentageOfStats(iChromosome);
-
+        double fitness = this.percentageOfStats(iChromosome) * 100.0;
+        fitness += (double) (100 - this.amountOfNodes(iChromosome));
         return fitness;
     }
 
@@ -45,12 +45,12 @@ public class PassiveTreeFitnessFunction extends FitnessFunction {
         for (Node node : nodesToConsider) {
             if (nodes.size() == 0) {
                 // we are looking for starting node
-                if (tree.getStartNodesForClass(_class).contains(node)) {
+                if (tree.getStartNodesForClass(_class).contains(node) && !nodes.contains(node)) {
                     nodes.add(node);
                 }
             } else {
                 for (Node node2 : nodes) {
-                    if (node2.getConnections().contains(node2)) {
+                    if (node2.getConnections().contains(node) && !nodes.contains(node)) {
                         nodes.add(node);
                         break;
                     }
@@ -94,5 +94,9 @@ public class PassiveTreeFitnessFunction extends FitnessFunction {
             sum += a;
         }
         return (sum / (double) percentages.length) * 100.0d;
+    }
+
+    private int amountOfNodes(IChromosome iChromosome) {
+        return PassiveTreeFitnessFunction.extractValidNodes(iChromosome, this.tree, this._class).size();
     }
 }
