@@ -41,8 +41,9 @@ public class TestTree extends Tree {
 
         // ugly now cause I'm lazy
         Node[] nodes = {testNode, testNode2, testNode3, testNode4, testNode5, testNode6, testNode7, testNode8, testNode9, testNode10, testNode11};
+        int i = 0;
         for (Node n : nodes) {
-            this.getNodeMap().put(n.getName(), n);
+            this.getNodeMap().put(i++, n);
         }
 
         this.setStartNodesForClass("witch", Arrays.asList(testNode, testNode2));

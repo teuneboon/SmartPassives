@@ -5,7 +5,7 @@ import java.util.List;
 
 public abstract class Tree {
     protected HashMap<String, List<Node>> startNodes = new HashMap<String, List<Node>>();
-    protected HashMap<String, Node> nodeMap = new HashMap<String, Node>();
+    protected HashMap<Integer, Node> nodeMap = new HashMap<Integer, Node>();
 
     public List<Node> getStartNodesForClass(String _class) {
         return this.startNodes.get(_class);
@@ -17,11 +17,11 @@ public abstract class Tree {
 
     public abstract void fill();
 
-    public HashMap<String, Node> getNodeMap() {
+    public HashMap<Integer, Node> getNodeMap() {
         return nodeMap;
     }
 
-    public void setNodeMap(HashMap<String, Node> nodeMap) {
+    public void setNodeMap(HashMap<Integer, Node> nodeMap) {
         this.nodeMap = nodeMap;
     }
 }
