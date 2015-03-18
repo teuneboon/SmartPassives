@@ -25,6 +25,12 @@ public class Application {
         final PassiveTreeFitnessFunction fitnessFunction = new PassiveTreeFitnessFunction(test, targetStats, "witch");
         final Configuration conf = constructConfiguration(fitnessFunction, test);
         final Genotype population = Genotype.randomInitialGenotype(conf);
+        for (int i = 0; i < 100; ++i) {
+            population.evolve();
+            IChromosome fittest = population.getFittestChromosome();
+            System.out.println(fittest.getFitnessValue());
+            System.out.println(PassiveTreeFitnessFunction.extractValidNodes(fittest, test, "witch"));
+        }
     }
 
     public static void main(String[] args) {
