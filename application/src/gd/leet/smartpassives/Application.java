@@ -4,6 +4,11 @@ import gd.leet.smartpassives.model.TestTree;
 import gd.leet.smartpassives.model.Tree;
 
 public class Application {
+    public int CHROMOSOME_LENGTH = 120;
+    public int POPULATION_SIZE = 200;
+    public double BASE_MUTATION_RATE = 5;
+    int STAGNATION_LIMIT_MIN = 50;
+
     public void run() throws Exception {
         Tree test = new TestTree();
         test.fill();

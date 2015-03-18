@@ -12,10 +12,10 @@ import org.jgap.impl.IntegerGene;
 import org.jgap.util.ICloneable;
 
 /**
- * Mostly based on https://github.com/infinity0/evolutionchamber/blob/master/EvolutionChamber/src/java/com/fray/evo/EcGeneticUtil.java
+ * Mostly based on https://github.com/infinity0/Application/blob/master/Application/src/java/com/fray/evo/EcGeneticUtil.java
  */
 public class GeneticOperators {
-    static GeneticOperator getDeletionOperator()
+    static GeneticOperator getDeletionOperator(final Application app)
     {
         return new GeneticOperator()
         {
@@ -24,7 +24,7 @@ public class GeneticOperators {
             {
                 for (int i = 0; i < arg0.size(); i++)
                 {
-                    if (Math.random() > EvolutionConfigValues.BASE_MUTATION_RATE/EvolutionConfigValues.CHROMOSOME_LENGTH)
+                    if (Math.random() > app.BASE_MUTATION_RATE/app.CHROMOSOME_LENGTH)
                         continue;
                     IChromosome chromosome = (IChromosome) ((ICloneable) arg0.getChromosome(i)).clone();
                     Gene[] beforeArray = chromosome.getGenes();
@@ -44,14 +44,14 @@ public class GeneticOperators {
         };
     }
 
-    static GeneticOperator getCleansingOperator()
+    static GeneticOperator getCleansingOperator(final Application app)
     {
         return new GeneticOperator()
         {
             @Override
             public void operate(Population arg0, List arg1)
             {
-                if (Math.random() > EvolutionConfigValues.BASE_MUTATION_RATE/EvolutionConfigValues.CHROMOSOME_LENGTH)
+                if (Math.random() > app.BASE_MUTATION_RATE/app.CHROMOSOME_LENGTH)
                     return;
                 IChromosome best = arg0.determineFittestChromosome();
                 for (int i = 0; i < best.getGenes().length; i++)
@@ -74,7 +74,7 @@ public class GeneticOperators {
         };
     }
 
-    static GeneticOperator getInsertionOperator()
+    static GeneticOperator getInsertionOperator(final Application app)
     {
         return new GeneticOperator()
         {
@@ -83,7 +83,7 @@ public class GeneticOperators {
             {
                 for (int i = 0; i < arg0.size(); i++)
                 {
-                    if (Math.random() > EvolutionConfigValues.BASE_MUTATION_RATE/EvolutionConfigValues.CHROMOSOME_LENGTH)
+                    if (Math.random() > app.BASE_MUTATION_RATE/app.CHROMOSOME_LENGTH)
                         continue;
                     IChromosome chromosome = (IChromosome) ((ICloneable) arg0.getChromosome(i)).clone();
                     Gene[] beforeArray = chromosome.getGenes();
@@ -106,7 +106,7 @@ public class GeneticOperators {
         };
     }
 
-    private static GeneticOperator getLengthenOperator()
+    private static GeneticOperator getLengthenOperator(final Application app)
     {
         return new GeneticOperator()
         {
@@ -115,7 +115,7 @@ public class GeneticOperators {
             {
                 for (int i = 0; i < arg0.size(); i++)
                 {
-                    if (Math.random() > EvolutionConfigValues.BASE_MUTATION_RATE/EvolutionConfigValues.CHROMOSOME_LENGTH)
+                    if (Math.random() > app.BASE_MUTATION_RATE/app.CHROMOSOME_LENGTH)
                         continue;
                     IChromosome chromosome = arg0.getChromosome(i);
                     Gene[] beforeArray = chromosome.getGenes();
@@ -152,14 +152,14 @@ public class GeneticOperators {
         };
     }
 
-    private static GeneticOperator getShortenOperator()
+    private static GeneticOperator getShortenOperator(final Application app)
     {
         return new GeneticOperator()
         {
             @Override
             public void operate(Population arg0, List arg1)
             {
-                if (Math.random() > EvolutionConfigValues.BASE_MUTATION_RATE/EvolutionConfigValues.CHROMOSOME_LENGTH)
+                if (Math.random() > app.BASE_MUTATION_RATE/app.CHROMOSOME_LENGTH)
                     return;
                 for (int i = 0; i < arg0.size(); i++)
                 {
@@ -196,7 +196,7 @@ public class GeneticOperators {
         };
     }
 
-    static GeneticOperator getSwapOperator()
+    static GeneticOperator getSwapOperator(final Application app)
     {
         return new GeneticOperator()
         {
@@ -205,7 +205,7 @@ public class GeneticOperators {
             {
                 for (int i = 0; i < arg0.size(); i++)
                 {
-                    if (Math.random() > EvolutionConfigValues.BASE_MUTATION_RATE/EvolutionConfigValues.CHROMOSOME_LENGTH)
+                    if (Math.random() > app.BASE_MUTATION_RATE/app.CHROMOSOME_LENGTH)
                         continue;
                     IChromosome chromosome = (IChromosome) ((ICloneable) arg0.getChromosome(i)).clone();
                     Gene[] beforeArray = chromosome.getGenes();
@@ -229,7 +229,7 @@ public class GeneticOperators {
         };
     }
 
-    static GeneticOperator getTwiddleOperator()
+    static GeneticOperator getTwiddleOperator(final Application app)
     {
         return new GeneticOperator()
         {
@@ -238,7 +238,7 @@ public class GeneticOperators {
             {
                 for (int i = 0; i < arg0.size(); i++)
                 {
-                    if (Math.random() > EvolutionConfigValues.BASE_MUTATION_RATE/EvolutionConfigValues.CHROMOSOME_LENGTH)
+                    if (Math.random() > app.BASE_MUTATION_RATE/app.CHROMOSOME_LENGTH)
                         continue;
                     IChromosome chromosome = (IChromosome) ((ICloneable) arg0.getChromosome(i)).clone();
                     Gene[] beforeArray = chromosome.getGenes();
