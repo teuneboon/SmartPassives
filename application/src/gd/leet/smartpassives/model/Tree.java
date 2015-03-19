@@ -34,6 +34,6 @@ public abstract class Tree {
     }
 
     public int getUpperBound() {
-        return this.getNodeMap().size();
+        return this.getNodeMap().size() - 1;
     }
 }

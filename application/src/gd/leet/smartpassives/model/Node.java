@@ -8,6 +8,7 @@ public class Node {
     private List<Node> connections;
     private HashMap<String, Integer> stats;
     private String name;
+    private Integer id;
 
     private void __init_stats() {
         this.stats = new HashMap<String, Integer>();
@@ -58,5 +59,13 @@ public class Node {
 
     public String toString() {
         return this.getName();
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

@@ -34,7 +34,9 @@ public class PassiveTreeFitnessFunction extends FitnessFunction {
         for (Gene gene1 : iChromosome.getGenes()) {
             IntegerGene gene = (IntegerGene) gene1;
             Integer passiveId = (Integer) gene.getAllele();
-            nodes.add(tree.getNodeMap().get(passiveId));
+            if (tree.getNodeMap().containsKey(passiveId)) {
+                nodes.add(tree.getNodeMap().get(passiveId));
+            }
         }
         return nodes;
     }

@@ -2,7 +2,6 @@ package gd.leet.smartpassives;
 
 import gd.leet.smartpassives.model.Node;
 import gd.leet.smartpassives.model.ParsedSkillTree;
-import gd.leet.smartpassives.model.TestTree;
 import gd.leet.smartpassives.model.Tree;
 import org.jgap.*;
 import org.jgap.event.GeneticEvent;
@@ -16,10 +15,12 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Application {
-    public int CHROMOSOME_LENGTH = 300;
+    public int CHROMOSOME_LENGTH = 2000;
     public int POPULATION_SIZE = 200;
     public double BASE_MUTATION_RATE = 5;
     int STAGNATION_LIMIT_MIN = 50;
+    public int NUM_THREADS = 8;
+    public int MAX_NUM_THREADS = 32;
 
     public Double bestScore = (double) 0;
     public Double waterMark = (double) 0;
@@ -31,9 +32,12 @@ public class Application {
 
     public void run() throws Exception {
         bestScore = (double) 0;
-        bestScores = new Double[1];
-        evolutionsSinceDiscovery = new Integer[1];
-        spawn(0);
+        bestScores = new Double[NUM_THREADS];
+        evolutionsSinceDiscovery = new Integer[NUM_THREADS];
+
+        for (int threadIndex = 0; threadIndex < NUM_THREADS; ++threadIndex) {
+            spawn(threadIndex);
+        }
 
 //        for (int i = 0; i < 100; ++i) {
 //            population.evolve();
@@ -51,13 +55,14 @@ public class Application {
 
     private void spawn(final int threadIndex) throws InvalidConfigurationException {
         bestScores[threadIndex] = (double) 0;
+        evolutionsSinceDiscovery[threadIndex] = 0;
 
         ParsedSkillTree skillTree = new ParsedSkillTree();
         skillTree.fill();
 
         HashMap<String, Integer> targetStats = getTargetStats();
         final PassiveTreeFitnessFunction fitnessFunction = new PassiveTreeFitnessFunction(skillTree, targetStats, "witch");
-        final Configuration conf = constructConfiguration(fitnessFunction, skillTree);
+        final Configuration conf = constructConfiguration(threadIndex, fitnessFunction, skillTree);
         final Genotype population = Genotype.randomInitialGenotype(conf);
 
         if (firstrun) {
@@ -197,11 +202,12 @@ public class Application {
         List<Node> validNodes = PassiveTreeFitnessFunction.extractValidNodes(fittest, skillTree, "witch");
 
         System.out.println(PassiveTreeFitnessFunction.percentageOfStats(fittest, skillTree, "witch", getTargetStats()) + "% in " + validNodes.size() + " nodes");
+        System.out.println(PassiveTreeFitnessFunction.getActionsInOrder(fittest, skillTree));
         System.out.println(validNodes);
     }
 
-    private Configuration constructConfiguration(PassiveTreeFitnessFunction fitnessFunc, Tree tree) throws InvalidConfigurationException {
-        final Configuration conf = new DefaultConfiguration();
+    private Configuration constructConfiguration(final int threadIndex, PassiveTreeFitnessFunction fitnessFunc, Tree tree) throws InvalidConfigurationException {
+        final Configuration conf = new DefaultConfiguration(threadIndex + " thread.", threadIndex + " thread.");
         conf.setFitnessFunction(fitnessFunc);
         conf.addGeneticOperator(GeneticOperators.getCleansingOperator(this));
         conf.addGeneticOperator(GeneticOperators.getInsertionOperator(this));

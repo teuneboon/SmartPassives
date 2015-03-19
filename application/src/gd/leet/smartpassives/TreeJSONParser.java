@@ -8,9 +8,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,32 +27,40 @@ public class TreeJSONParser {
     public void parse(Tree tree) throws IOException {
         Pattern statPattern = Pattern.compile("(\\D*)(\\d+)(\\D*)"); // find a number in a text
 
-        HashMap<Integer, Integer> connections = new HashMap<Integer, Integer>();
+        HashMap<Integer, List<Integer>> connections = new HashMap<Integer, List<Integer>>();
+        HashMap<Integer, Integer> idToIndex = new HashMap<Integer, Integer>();
 
         JSONObject obj = new JSONObject(this.get_file_contents());
         JSONArray nodes = obj.getJSONArray("nodes");
         for (int i = 0; i < nodes.length(); ++i) {
             JSONObject node = nodes.getJSONObject(i);
-            tree.getNodeMap().put(node.getInt("id"), new Node(node.getString("dn")));
+            tree.getNodeMap().put(i, new Node(node.getString("dn")));
+            tree.getNodeMap().get(i).setId(node.getInt("id"));
+            idToIndex.put(node.getInt("id"), i);
 
             JSONArray stats = node.getJSONArray("sd");
             for (int k = 0; k < stats.length(); ++k) {
                 String stat = stats.getString(k);
                 Matcher m = statPattern.matcher(stat);
                 if (m.find()) {
-                    tree.getNodeMap().get(node.getInt("id")).getStats().put(m.group(1) + m.group(3), Integer.parseInt(m.group(2)));
+                    tree.getNodeMap().get(i).getStats().put(m.group(1) + m.group(3), Integer.parseInt(m.group(2)));
                 }
             }
 
             JSONArray outs = node.getJSONArray("out");
 
             for (int j = 0; j < outs.length(); ++j) {
-                connections.put(node.getInt("id"), outs.getInt(j));
+                if (!connections.containsKey(node.getInt("id"))) {
+                    connections.put(node.getInt("id"), new ArrayList<Integer>());
+                }
+                connections.get(node.getInt("id")).add(outs.getInt(j));
             }
         }
 
-        for (Map.Entry<Integer, Integer> entry : connections.entrySet()) {
-            tree.connect(entry.getKey(), entry.getValue());
+        for (Map.Entry<Integer, List<Integer>> entry : connections.entrySet()) {
+            for (Integer i : entry.getValue()) {
+                tree.connect(idToIndex.get(entry.getKey()), idToIndex.get(i));
+            }
         }
 
         tree.setStartNodesForClass("witch", Arrays.asList(tree.getNodeMap().get(57226), tree.getNodeMap().get(57264)));
