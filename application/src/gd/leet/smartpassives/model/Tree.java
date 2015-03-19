@@ -11,7 +11,7 @@ public abstract class Tree {
         return this.startNodes.get(_class);
     }
 
-    protected void setStartNodesForClass(String _class, List<Node> nodes) {
+    public void setStartNodesForClass(String _class, List<Node> nodes) {
         this.startNodes.put(_class, nodes);
     }
 
@@ -25,7 +25,15 @@ public abstract class Tree {
         this.nodeMap = nodeMap;
     }
 
-    protected void connect(int id1, int id2) {
+    public void connect(int id1, int id2) {
         this.getNodeMap().get(id1).connect(this.getNodeMap().get(id2));
+    }
+
+    public int getLowerBound() {
+        return 0;
+    }
+
+    public int getUpperBound() {
+        return this.getNodeMap().size();
     }
 }

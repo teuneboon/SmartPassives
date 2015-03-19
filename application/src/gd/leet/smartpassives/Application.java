@@ -1,5 +1,6 @@
 package gd.leet.smartpassives;
 
+import gd.leet.smartpassives.model.ParsedSkillTree;
 import gd.leet.smartpassives.model.TestTree;
 import gd.leet.smartpassives.model.Tree;
 import org.jgap.*;
@@ -43,15 +44,14 @@ public class Application {
     private void spawn(final int threadIndex) throws InvalidConfigurationException {
         bestScores[threadIndex] = (double) 0;
 
-        Tree test = new TestTree();
-        test.fill();
+        ParsedSkillTree skillTree = new ParsedSkillTree();
+        skillTree.fill();
 
         HashMap<String, Integer> targetStats = new HashMap<String, Integer>();
-        targetStats.put("Intelligence", 30);
-        targetStats.put("% increased Cast Speed", 6);
-        targetStats.put("% increased maximum Mana", 8);
-        final PassiveTreeFitnessFunction fitnessFunction = new PassiveTreeFitnessFunction(test, targetStats, "witch");
-        final Configuration conf = constructConfiguration(fitnessFunction, test);
+        targetStats.put("+ to Intelligence", 30);
+        targetStats.put("% increased Spell Damage", 30);
+        final PassiveTreeFitnessFunction fitnessFunction = new PassiveTreeFitnessFunction(skillTree, targetStats, "witch");
+        final Configuration conf = constructConfiguration(fitnessFunction, skillTree);
         final Genotype population = Genotype.randomInitialGenotype(conf);
 
         if (firstrun) {
@@ -185,11 +185,11 @@ public class Application {
     }
 
     public static void displayChromosome(IChromosome fittest) {
-        Tree test = new TestTree();
-        test.fill();
+        ParsedSkillTree skillTree = new ParsedSkillTree();
+        skillTree.fill();
 
         System.out.println(fittest.getFitnessValue());
-        System.out.println(PassiveTreeFitnessFunction.extractValidNodes(fittest, test, "witch"));
+        System.out.println(PassiveTreeFitnessFunction.extractValidNodes(fittest, skillTree, "witch"));
     }
 
     private Configuration constructConfiguration(PassiveTreeFitnessFunction fitnessFunc, Tree tree) throws InvalidConfigurationException {
@@ -217,7 +217,7 @@ public class Application {
         for (int i = 0; i < CHROMOSOME_LENGTH; i++)
             try
             {
-                IntegerGene g = new IntegerGene(conf, 0, tree.getNodeMap().size() - 1);
+                IntegerGene g = new IntegerGene(conf, tree.getLowerBound(), tree.getUpperBound());
                 g.setAllele(0);
                 genes.add(g);
             }

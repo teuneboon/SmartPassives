@@ -24,8 +24,8 @@ public class PassiveTreeFitnessFunction extends FitnessFunction {
     }
 
     protected double evaluate(IChromosome iChromosome) {
-        double fitness = this.percentageOfStats(iChromosome) * 100.0;
-        fitness += (double) (100 - this.amountOfNodes(iChromosome));
+        double fitness = this.percentageOfStats(iChromosome) * 120.0;
+        fitness += (double) (120 - this.amountOfNodes(iChromosome));
         return fitness;
     }
 
