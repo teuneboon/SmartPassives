@@ -34,11 +34,14 @@ public class TreeJSONParser {
         JSONArray nodes = obj.getJSONArray("nodes");
         for (int i = 0; i < nodes.length(); ++i) {
             JSONObject node = nodes.getJSONObject(i);
+            JSONArray stats = node.getJSONArray("sd");
+            if (stats.length() == 0) {
+                continue;
+            }
             tree.getNodeMap().put(i, new Node(node.getString("dn")));
             tree.getNodeMap().get(i).setId(node.getInt("id"));
             idToIndex.put(node.getInt("id"), i);
 
-            JSONArray stats = node.getJSONArray("sd");
             for (int k = 0; k < stats.length(); ++k) {
                 String stat = stats.getString(k);
                 Matcher m = statPattern.matcher(stat);
@@ -59,7 +62,9 @@ public class TreeJSONParser {
 
         for (Map.Entry<Integer, List<Integer>> entry : connections.entrySet()) {
             for (Integer i : entry.getValue()) {
-                tree.connect(idToIndex.get(entry.getKey()), idToIndex.get(i));
+                if (tree.getNodeMap().containsKey(idToIndex.get(i))) {
+                    tree.connect(idToIndex.get(entry.getKey()), idToIndex.get(i));
+                }
             }
         }
 

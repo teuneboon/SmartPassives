@@ -49,7 +49,7 @@ public class Application {
 
     private static HashMap<String, Integer> getTargetStats() {
         HashMap<String, Integer> targetStats = new HashMap<String, Integer>();
-        targetStats.put("% increased maximum Energy Shield", 200);
+        targetStats.put("Intelligence", 200);
         return targetStats;
     }
 
