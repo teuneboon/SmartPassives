@@ -1,5 +1,6 @@
 package gd.leet.smartpassives;
 
+import gd.leet.smartpassives.model.Node;
 import gd.leet.smartpassives.model.ParsedSkillTree;
 import gd.leet.smartpassives.model.TestTree;
 import gd.leet.smartpassives.model.Tree;
@@ -12,9 +13,10 @@ import org.jgap.impl.IntegerGene;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 public class Application {
-    public int CHROMOSOME_LENGTH = 120;
+    public int CHROMOSOME_LENGTH = 300;
     public int POPULATION_SIZE = 200;
     public double BASE_MUTATION_RATE = 5;
     int STAGNATION_LIMIT_MIN = 50;
@@ -41,15 +43,19 @@ public class Application {
 //        }
     }
 
+    private static HashMap<String, Integer> getTargetStats() {
+        HashMap<String, Integer> targetStats = new HashMap<String, Integer>();
+        targetStats.put("% increased maximum Energy Shield", 200);
+        return targetStats;
+    }
+
     private void spawn(final int threadIndex) throws InvalidConfigurationException {
         bestScores[threadIndex] = (double) 0;
 
         ParsedSkillTree skillTree = new ParsedSkillTree();
         skillTree.fill();
 
-        HashMap<String, Integer> targetStats = new HashMap<String, Integer>();
-        targetStats.put("+ to Intelligence", 30);
-        targetStats.put("% increased Spell Damage", 30);
+        HashMap<String, Integer> targetStats = getTargetStats();
         final PassiveTreeFitnessFunction fitnessFunction = new PassiveTreeFitnessFunction(skillTree, targetStats, "witch");
         final Configuration conf = constructConfiguration(fitnessFunction, skillTree);
         final Genotype population = Genotype.randomInitialGenotype(conf);
@@ -188,8 +194,10 @@ public class Application {
         ParsedSkillTree skillTree = new ParsedSkillTree();
         skillTree.fill();
 
-        System.out.println(fittest.getFitnessValue());
-        System.out.println(PassiveTreeFitnessFunction.extractValidNodes(fittest, skillTree, "witch"));
+        List<Node> validNodes = PassiveTreeFitnessFunction.extractValidNodes(fittest, skillTree, "witch");
+
+        System.out.println(PassiveTreeFitnessFunction.percentageOfStats(fittest, skillTree, "witch", getTargetStats()) + "% in " + validNodes.size() + " nodes");
+        System.out.println(validNodes);
     }
 
     private Configuration constructConfiguration(PassiveTreeFitnessFunction fitnessFunc, Tree tree) throws InvalidConfigurationException {
