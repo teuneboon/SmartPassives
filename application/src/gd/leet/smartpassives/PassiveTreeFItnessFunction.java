@@ -24,7 +24,7 @@ public class PassiveTreeFitnessFunction extends FitnessFunction {
     }
 
     protected double evaluate(IChromosome iChromosome) {
-        double fitness = this.percentageOfStats(iChromosome) * 120.0;
+        double fitness = percentageOfStats(iChromosome, this.tree, this._class, this.targetStats) * 120.0;
         fitness += (double) (120 - this.amountOfNodes(iChromosome));
         return fitness;
     }
@@ -58,7 +58,7 @@ public class PassiveTreeFitnessFunction extends FitnessFunction {
         return nodes;
     }
 
-    private HashMap<String, Integer> getStats(List<Node> nodes) {
+    public static HashMap<String, Integer> getStats(List<Node> nodes) {
         HashMap<String, Integer> result = new HashMap<String, Integer>();
         for (Node node : nodes) {
             for (Map.Entry<String, Integer> entry : node.getStats().entrySet()) {
@@ -72,16 +72,16 @@ public class PassiveTreeFitnessFunction extends FitnessFunction {
         return result;
     }
 
-    private double percentageOfStats(IChromosome iChromosome) {
-        HashMap<String, Integer> stats = this.getStats(PassiveTreeFitnessFunction.extractValidNodes(iChromosome, this.tree, this._class));
-        double[] percentages = new double[this.targetStats.size()];
+    public static double percentageOfStats(IChromosome iChromosome, Tree tree, String _class, HashMap<String, Integer> targetStats) {
+        HashMap<String, Integer> stats = getStats(PassiveTreeFitnessFunction.extractValidNodes(iChromosome, tree, _class));
+        double[] percentages = new double[targetStats.size()];
         int i = 0;
-        for (Map.Entry<String, Integer> entry : this.targetStats.entrySet()) {
+        for (Map.Entry<String, Integer> entry : targetStats.entrySet()) {
             int value = 0;
             if (stats.containsKey(entry.getKey())) {
                 value = stats.get(entry.getKey());
             }
-            double percentage = (double)value/(double)entry.getValue();
+            double percentage = (double)value / (double)entry.getValue();
             if (percentage > 1) {
                 percentage = 1;
             }
