@@ -1,13 +1,27 @@
 package gd.leet.smartpassives.model;
 
+import org.jgap.Gene;
+import org.jgap.IChromosome;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Build {
     private List<Node> takenNodes;
+    private Tree tree;
 
-    public Build() {
+    public Build(Tree tree) {
         this.takenNodes = new ArrayList<Node>();
+        this.tree = tree;
+    }
+
+    public Build(Tree tree, IChromosome chromosome) {
+        // @TODO this method is bad for seperation of concerns
+        this.tree = tree;
+        this.takenNodes = new ArrayList<Node>();
+        for (Gene gene : chromosome.getGenes()) {
+            this.takenNodes.add(this.tree.getNodeMap().get((Integer) gene.getAllele()));
+        }
     }
 
     public List<Node> getAvailableNodes() {

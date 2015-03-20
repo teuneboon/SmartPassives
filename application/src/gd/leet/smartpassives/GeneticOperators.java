@@ -2,6 +2,7 @@ package gd.leet.smartpassives;
 
 import java.util.List;
 
+import gd.leet.smartpassives.model.Build;
 import org.jgap.Gene;
 import org.jgap.GeneticOperator;
 import org.jgap.IChromosome;
@@ -79,13 +80,14 @@ public class GeneticOperators {
         return new GeneticOperator()
         {
             @Override
-            public void operate(Population arg0, List arg1)
+            public void operate(Population population, List arg1)
             {
-                for (int i = 0; i < arg0.size(); i++)
+                for (int i = 0; i < population.size(); i++)
                 {
                     if (Math.random() > app.BASE_MUTATION_RATE/app.CHROMOSOME_LENGTH)
                         continue;
-                    IChromosome chromosome = (IChromosome) ((ICloneable) arg0.getChromosome(i)).clone();
+                    IChromosome chromosome = (IChromosome) ((ICloneable) population.getChromosome(i)).clone();
+                    Build build = new Build(app.TREE, chromosome);
                     Gene[] beforeArray = chromosome.getGenes();
                     int randomPoint = (int) (Math.random() * beforeArray.length);
                     for (int j = randomPoint; j < beforeArray.length - 1; j++)

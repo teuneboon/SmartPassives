@@ -21,6 +21,7 @@ public class Application {
     int STAGNATION_LIMIT_MIN = 50;
     public int NUM_THREADS = 8;
     public int MAX_NUM_THREADS = 32;
+    public Tree TREE;
 
     public Double bestScore = (double) 0;
     public Double waterMark = (double) 0;
@@ -34,6 +35,8 @@ public class Application {
         bestScore = (double) 0;
         bestScores = new Double[NUM_THREADS];
         evolutionsSinceDiscovery = new Integer[NUM_THREADS];
+        TREE = new ParsedSkillTree();
+        TREE.fill();
 
         for (int threadIndex = 0; threadIndex < NUM_THREADS; ++threadIndex) {
             spawn(threadIndex);
@@ -57,12 +60,9 @@ public class Application {
         bestScores[threadIndex] = (double) -1;
         evolutionsSinceDiscovery[threadIndex] = 0;
 
-        ParsedSkillTree skillTree = new ParsedSkillTree();
-        skillTree.fill();
-
         HashMap<String, Integer> targetStats = getTargetStats();
-        final PassiveTreeFitnessFunction fitnessFunction = new PassiveTreeFitnessFunction(skillTree, targetStats, "witch");
-        final Configuration conf = constructConfiguration(threadIndex, fitnessFunction, skillTree);
+        final PassiveTreeFitnessFunction fitnessFunction = new PassiveTreeFitnessFunction(TREE, targetStats, "witch");
+        final Configuration conf = constructConfiguration(threadIndex, fitnessFunction, TREE);
         final Genotype population = Genotype.randomInitialGenotype(conf);
 
         if (firstrun) {
