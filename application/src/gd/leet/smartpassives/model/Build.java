@@ -31,4 +31,12 @@ public class Build {
         }
         return removeableNodes;
     }
+
+    public List<Node> getTakenNodes() {
+        return takenNodes;
+    }
+
+    public void setTakenNodes(List<Node> takenNodes) {
+        this.takenNodes = takenNodes;
+    }
 }
