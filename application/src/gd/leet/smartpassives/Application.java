@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Application {
-    public int CHROMOSOME_LENGTH = 2000;
+    public int CHROMOSOME_LENGTH = 200;
     public int POPULATION_SIZE = 200;
     public double BASE_MUTATION_RATE = 5;
     int STAGNATION_LIMIT_MIN = 50;
@@ -54,7 +54,7 @@ public class Application {
     }
 
     private void spawn(final int threadIndex) throws InvalidConfigurationException {
-        bestScores[threadIndex] = (double) 0;
+        bestScores[threadIndex] = (double) -1;
         evolutionsSinceDiscovery[threadIndex] = 0;
 
         ParsedSkillTree skillTree = new ParsedSkillTree();
@@ -89,9 +89,9 @@ public class Application {
                     bestScores[threadIndex] = fitnessValue;
                     evolutionsSinceDiscovery[threadIndex] = 0;
                     BASE_MUTATION_RATE = 1;
-                }
-                else
+                } else {
                     evolutionsSinceDiscovery[threadIndex]++;
+                }
 
                 int highestevosSinceDiscovery = 0;
                 for(int i = 0; i < bestScores.length; i++ )
