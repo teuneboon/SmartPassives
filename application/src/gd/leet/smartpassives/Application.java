@@ -54,7 +54,12 @@ public class Application {
 
     private static HashMap<String, Integer> getTargetStats() {
         HashMap<String, Integer> targetStats = new HashMap<String, Integer>();
-        targetStats.put("% increased maximum Energy Shield", 200);
+        targetStats.put("% increased maximum Energy Shield", 144); // 144% es, 156% life, 160% mana reg,Minions deal 105% Base dmg, 22% Reduced mana reserved, 12% flask effect
+        targetStats.put("% increased maximum Life", 156);
+        targetStats.put("% increased Mana Regeneration Rate", 160);
+        targetStats.put("Minions deal % increased Damage", 105);
+        targetStats.put("% increased effect of Flasks", 12);
+        targetStats.put("% reduced Mana Reserved", 22);
         return targetStats;
     }
 

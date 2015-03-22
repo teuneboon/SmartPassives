@@ -62,28 +62,39 @@ public class Build {
         return availableNodes;
     }
 
+    private List<Node> cloneTakenNodes() {
+        List<Node> clone = new ArrayList<Node>(this.takenNodes.size());
+        for (Node node : this.takenNodes) clone.add(node);
+        return clone;
+    }
+
     public List<Node> getRemoveableNodes() {
         List<Node> removeableNodes = new ArrayList<Node>();
         for (Node node : this.takenNodes) {
-            int connectionCount = 0;
-            for (Node connection : node.getConnections()) {
-                if (this.takenNodes.contains(connection)) {
-                    connectionCount++;
-                }
-                List<Node> testList = new ArrayList<Node>();
-                for (Node connection2 : node.getConnections()) {
-                    if (connection2 != connection) {
-                        testList.add(connection2);
-                    }
-                }
-                testList.add(node);
-                if (connection.getConnections().containsAll(testList) && connection.getConnections().size() == testList.size()) {
-                    removeableNodes.add(connection);
-                }
-            }
-            if (connectionCount <= 1 && !removeableNodes.contains(node)) { // can be 0 on start nodes
+            List<Node> cloned = this.cloneTakenNodes();
+            cloned.remove(node);
+            if (this.isValid(cloned)) {
                 removeableNodes.add(node);
             }
+//            int connectionCount = 0;
+//            for (Node connection : node.getConnections()) {
+//                if (this.takenNodes.contains(connection)) {
+//                    connectionCount++;
+//                }
+//                List<Node> testList = new ArrayList<Node>();
+//                for (Node connection2 : node.getConnections()) {
+//                    if (connection2 != connection) {
+//                        testList.add(connection2);
+//                    }
+//                }
+//                testList.add(node);
+//                if (connection.getConnections().containsAll(testList) && connection.getConnections().size() == testList.size()) {
+//                    removeableNodes.add(connection);
+//                }
+//            }
+//            if (connectionCount <= 1 && !removeableNodes.contains(node)) { // can be 0 on start nodes
+//                removeableNodes.add(node);
+//            }
         }
         return removeableNodes;
     }
@@ -113,5 +124,30 @@ public class Build {
             b[pos++] = nodeByte[0];
         }
         return "http://www.pathofexile.com/passive-skill-tree/" + Base64.encodeBase64String(b).replace("/", "_").replace("+", "-");
+    }
+
+    public boolean isValid() {
+        return this.isValid(this.takenNodes);
+    }
+
+    private void connectionWalker(Node node, List<Node> passedNodes, List<Node> nodes) {
+        if (!passedNodes.contains(node)) {
+            passedNodes.add(node);
+            for (Node connection : node.getConnections()) {
+                if (nodes.contains(connection)) {
+                    this.connectionWalker(connection, passedNodes, nodes);
+                }
+            }
+        }
+    }
+
+    private boolean isValid(List<Node> nodes) {
+        if (nodes.size() == 0) {
+            return true;
+        }
+        List<Node> passedNodes = new ArrayList<Node>();
+        Node currentNode = nodes.get(0);
+        this.connectionWalker(currentNode, passedNodes, nodes);
+        return passedNodes.size() == nodes.size();
     }
 }
