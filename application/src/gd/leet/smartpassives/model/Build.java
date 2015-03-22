@@ -70,8 +70,18 @@ public class Build {
                 if (this.takenNodes.contains(connection)) {
                     connectionCount++;
                 }
+                List<Node> testList = new ArrayList<Node>();
+                for (Node connection2 : node.getConnections()) {
+                    if (connection2 != connection) {
+                        testList.add(connection2);
+                    }
+                }
+                testList.add(node);
+                if (connection.getConnections().containsAll(testList) && connection.getConnections().size() == testList.size()) {
+                    removeableNodes.add(connection);
+                }
             }
-            if (connectionCount <= 1) { // can be 0 on start nodes
+            if (connectionCount <= 1 && !removeableNodes.contains(node)) { // can be 0 on start nodes
                 removeableNodes.add(node);
             }
         }
