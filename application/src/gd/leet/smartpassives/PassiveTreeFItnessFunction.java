@@ -77,6 +77,7 @@ public class PassiveTreeFitnessFunction extends FitnessFunction {
                 }
             }
         }
+        result.put("raw_% increased maximum Energy Shield", result.get("% increased maximum Energy Shield"));
         if (result.containsKey("+ to Intelligence")) {
             int energyShieldIntBonus = result.get("+ to Intelligence") / 5;
             if (result.containsKey("% increased maximum Energy Shield")) {
