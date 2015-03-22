@@ -60,7 +60,13 @@ public class Build {
     public List<Node> getRemoveableNodes() {
         List<Node> removeableNodes = new ArrayList<Node>();
         for (Node node : this.takenNodes) {
-            if (node.getConnections().size() == 1) {
+            int connectionCount = 0;
+            for (Node connection : node.getConnections()) {
+                if (this.takenNodes.contains(connection)) {
+                    connectionCount++;
+                }
+            }
+            if (connectionCount <= 1) { // can be 0 on start nodes
                 removeableNodes.add(node);
             }
         }
