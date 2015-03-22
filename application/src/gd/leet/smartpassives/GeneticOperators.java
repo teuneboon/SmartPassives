@@ -29,7 +29,7 @@ public class GeneticOperators {
                         continue;
                     IChromosome chromosome = (IChromosome) ((ICloneable) population.getChromosome(i)).clone();
                     Build build = new Build(app.TREE, chromosome);
-                    int tries = ThreadLocalRandom.current().nextInt(5) + 1; // remove a max of 6 nodes
+                    int tries = ThreadLocalRandom.current().nextInt(1) + 1; // remove a max of 2 nodes
                     for (int j = 0; j < tries; ++j) {
                         List<Node> removeableNodes = build.getRemoveableNodes();
                         if (removeableNodes.size() >= 1) {
@@ -62,7 +62,7 @@ public class GeneticOperators {
                         continue;
                     IChromosome chromosome = (IChromosome) ((ICloneable) population.getChromosome(i)).clone();
                     Build build = new Build(app.TREE, chromosome);
-                    int tries = ThreadLocalRandom.current().nextInt(5) + 1; // remove a max of 6 nodes
+                    int tries = ThreadLocalRandom.current().nextInt(5) + 1; // add a max of 6 nodes
                     for (int j = 0; j < tries; ++j) {
                         List<Node> availableNodes = build.getAvailableNodes();
                         if (availableNodes.size() >= 1) {
