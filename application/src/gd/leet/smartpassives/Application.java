@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Application {
-    public int CHROMOSOME_LENGTH = 200;
+    public int CHROMOSOME_LENGTH = 120;
     public int POPULATION_SIZE = 200;
     public double BASE_MUTATION_RATE = 5;
     int STAGNATION_LIMIT_MIN = 50;
@@ -55,11 +55,11 @@ public class Application {
     private static HashMap<String, Integer> getTargetStats() {
         HashMap<String, Integer> targetStats = new HashMap<String, Integer>();
         targetStats.put("% increased maximum Energy Shield", 144); // 144% es, 156% life, 160% mana reg,Minions deal 105% Base dmg, 22% Reduced mana reserved, 12% flask effect
-        targetStats.put("% increased maximum Life", 156);
-        targetStats.put("% increased Mana Regeneration Rate", 160);
-        targetStats.put("Minions deal % increased Damage", 105);
-        targetStats.put("% increased effect of Flasks", 12);
-        targetStats.put("% reduced Mana Reserved", 22);
+//        targetStats.put("% increased maximum Life", 156);
+//        targetStats.put("% increased Mana Regeneration Rate", 160);
+//        targetStats.put("Minions deal % increased Damage", 105);
+//        targetStats.put("% increased effect of Flasks", 12);
+//        targetStats.put("% reduced Mana Reserved", 22);
         return targetStats;
     }
 
