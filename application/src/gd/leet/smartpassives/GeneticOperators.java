@@ -29,12 +29,15 @@ public class GeneticOperators {
                         continue;
                     IChromosome chromosome = (IChromosome) ((ICloneable) population.getChromosome(i)).clone();
                     Build build = new Build(app.TREE, chromosome);
-                    List<Node> removeableNodes = build.getRemoveableNodes();
-                    if (removeableNodes.size() == 0) {
-                        continue;
+                    int tries = ThreadLocalRandom.current().nextInt(5) + 1; // remove a max of 6 nodes
+                    for (int j = 0; j < tries; ++j) {
+                        List<Node> removeableNodes = build.getRemoveableNodes();
+                        if (removeableNodes.size() >= 1) {
+                            Node toRemove = removeableNodes.get(ThreadLocalRandom.current().nextInt(removeableNodes.size()));
+                            build.getTakenNodes().remove(toRemove);
+                        }
                     }
-                    Node toRemove = removeableNodes.get(ThreadLocalRandom.current().nextInt(removeableNodes.size()));
-                    build.getTakenNodes().remove(toRemove);
+
                     try {
                         build.setGenes(chromosome);
                     } catch (InvalidConfigurationException e) {
@@ -59,12 +62,14 @@ public class GeneticOperators {
                         continue;
                     IChromosome chromosome = (IChromosome) ((ICloneable) population.getChromosome(i)).clone();
                     Build build = new Build(app.TREE, chromosome);
-                    List<Node> availableNodes = build.getAvailableNodes();
-                    if (availableNodes.size() == 0) {
-                        continue;
+                    int tries = ThreadLocalRandom.current().nextInt(5) + 1; // remove a max of 6 nodes
+                    for (int j = 0; j < tries; ++j) {
+                        List<Node> availableNodes = build.getAvailableNodes();
+                        if (availableNodes.size() >= 1) {
+                            Node toAdd = availableNodes.get(ThreadLocalRandom.current().nextInt(availableNodes.size()));
+                            build.getTakenNodes().add(toAdd);
+                        }
                     }
-                    Node toAdd = availableNodes.get(ThreadLocalRandom.current().nextInt(availableNodes.size()));
-                    build.getTakenNodes().add(toAdd);
                     try {
                         build.setGenes(chromosome);
                     } catch (InvalidConfigurationException e) {
