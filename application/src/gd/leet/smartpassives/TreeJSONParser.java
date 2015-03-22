@@ -68,6 +68,8 @@ public class TreeJSONParser {
             }
         }
 
+        tree.setIdToIndex(idToIndex);
+
         tree.setStartNodesForClass("witch", Arrays.asList(tree.getNodeMap().get(idToIndex.get(57226)), tree.getNodeMap().get(idToIndex.get(57264))));
     }
 }

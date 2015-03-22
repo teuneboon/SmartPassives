@@ -6,6 +6,7 @@ import java.util.List;
 public abstract class Tree {
     protected HashMap<String, List<Node>> startNodes = new HashMap<String, List<Node>>();
     protected HashMap<Integer, Node> nodeMap = new HashMap<Integer, Node>();
+    protected HashMap<Integer, Integer> idToIndex = new HashMap<Integer, Integer>();
 
     public List<Node> getStartNodesForClass(String _class) {
         return this.startNodes.get(_class);
@@ -35,5 +36,13 @@ public abstract class Tree {
 
     public int getUpperBound() {
         return this.getNodeMap().size() - 1;
+    }
+
+    public HashMap<Integer, Integer> getIdToIndex() {
+        return idToIndex;
+    }
+
+    public void setIdToIndex(HashMap<Integer, Integer> idToIndex) {
+        this.idToIndex = idToIndex;
     }
 }

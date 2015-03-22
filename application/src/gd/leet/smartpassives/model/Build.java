@@ -2,6 +2,9 @@ package gd.leet.smartpassives.model;
 
 import org.jgap.Gene;
 import org.jgap.IChromosome;
+import org.jgap.InvalidConfigurationException;
+import org.jgap.impl.IntegerGene;
+import org.jgap.util.ICloneable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +23,22 @@ public class Build {
         this.tree = tree;
         this.takenNodes = new ArrayList<Node>();
         for (Gene gene : chromosome.getGenes()) {
-            this.takenNodes.add(this.tree.getNodeMap().get((Integer) gene.getAllele()));
+            Node node = this.tree.getNodeMap().get((Integer) gene.getAllele());
+            if (node != null) {
+                this.takenNodes.add(node);
+            }
         }
+    }
+
+    public void setGenes(IChromosome chromosome) throws InvalidConfigurationException {
+        int i = 0;
+        Gene[] genes = new Gene[this.takenNodes.size()];
+        for (Node node : this.takenNodes) {
+            Gene gene = new IntegerGene(chromosome.getConfiguration());
+            gene.setAllele(tree.getIdToIndex().get(node.getId()));
+            genes[i++] = gene;
+        }
+        chromosome.setGenes(genes);
     }
 
     public List<Node> getAvailableNodes() {

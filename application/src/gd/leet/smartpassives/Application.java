@@ -52,7 +52,7 @@ public class Application {
 
     private static HashMap<String, Integer> getTargetStats() {
         HashMap<String, Integer> targetStats = new HashMap<String, Integer>();
-        targetStats.put("Intelligence", 200);
+        targetStats.put("+ to Intelligence", 200);
         return targetStats;
     }
 
@@ -209,11 +209,9 @@ public class Application {
     private Configuration constructConfiguration(final int threadIndex, PassiveTreeFitnessFunction fitnessFunc, Tree tree) throws InvalidConfigurationException {
         final Configuration conf = new DefaultConfiguration(threadIndex + " thread.", threadIndex + " thread.");
         conf.setFitnessFunction(fitnessFunc);
-        conf.addGeneticOperator(GeneticOperators.getCleansingOperator(this));
+        conf.getGeneticOperators().clear();
         conf.addGeneticOperator(GeneticOperators.getInsertionOperator(this));
         conf.addGeneticOperator(GeneticOperators.getDeletionOperator(this));
-        conf.addGeneticOperator(GeneticOperators.getTwiddleOperator(this));
-        conf.addGeneticOperator(GeneticOperators.getSwapOperator(this));
         conf.setPopulationSize(POPULATION_SIZE);
         conf.setSelectFromPrevGen(1);
         conf.setPreservFittestIndividual(false);
