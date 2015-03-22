@@ -26,7 +26,7 @@ public class PassiveTreeFitnessFunction extends FitnessFunction {
     protected double evaluate(IChromosome iChromosome) {
         double percentage = percentageOfStats(iChromosome, this.tree, this._class, this.targetStats);
         double fitness = percentage * 120.0;
-        if (percentage >= 100) {
+        if (percentage >= 90) {
             fitness += (double) (120 - this.amountOfNodes(iChromosome));
         } else {
             fitness += (double) this.amountOfNodes(iChromosome); // we want as many valid nodes as possible if we're not complete yet

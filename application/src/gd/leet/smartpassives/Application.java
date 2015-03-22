@@ -54,7 +54,7 @@ public class Application {
 
     private static HashMap<String, Integer> getTargetStats() {
         HashMap<String, Integer> targetStats = new HashMap<String, Integer>();
-        targetStats.put("+ to Intelligence", 50);
+        targetStats.put("% increased maximum Energy Shield", 200);
         return targetStats;
     }
 
@@ -202,9 +202,11 @@ public class Application {
         skillTree.fill();
 
         List<Node> validNodes = PassiveTreeFitnessFunction.extractValidNodes(fittest, skillTree, "witch");
+        Build build = new Build(skillTree, fittest);
 
         System.out.println(PassiveTreeFitnessFunction.percentageOfStats(fittest, skillTree, "witch", getTargetStats()) + "% in " + validNodes.size() + " nodes");
         System.out.println(validNodes);
+        System.out.println(build.toURL());
     }
 
     private Configuration constructConfiguration(final int threadIndex, PassiveTreeFitnessFunction fitnessFunc, Tree tree) throws InvalidConfigurationException {

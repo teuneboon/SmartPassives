@@ -1,10 +1,13 @@
 package gd.leet.smartpassives.model;
 
+import org.apache.commons.codec.binary.Base64;
 import org.jgap.Gene;
 import org.jgap.IChromosome;
 import org.jgap.InvalidConfigurationException;
 import org.jgap.impl.IntegerGene;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,10 +24,12 @@ public class Build {
         // @TODO this method is bad for seperation of concerns
         this.tree = tree;
         this.takenNodes = new ArrayList<Node>();
-        for (Gene gene : chromosome.getGenes()) {
-            Node node = this.tree.getNodeMap().get((Integer) gene.getAllele());
-            if (node != null) {
-                this.takenNodes.add(node);
+        if (chromosome != null && chromosome.getGenes() != null) {
+            for (Gene gene : chromosome.getGenes()) {
+                Node node = this.tree.getNodeMap().get((Integer) gene.getAllele());
+                if (node != null) {
+                    this.takenNodes.add(node);
+                }
             }
         }
     }
@@ -79,5 +84,24 @@ public class Build {
 
     public void setTakenNodes(List<Node> takenNodes) {
         this.takenNodes = takenNodes;
+    }
+
+    public String toURL() {
+        byte[] b = new byte[(this.getTakenNodes().size()) * 2 + 6];
+        b[0] = 0;
+        b[1] = 0;
+        b[2] = 0;
+        b[3] = 2;
+        b[4] = (byte)(3); // 3 = witch I think
+        b[5] = 0;
+        int pos = 6;
+        for (Node node : this.takenNodes) {
+            ByteBuffer buffer = ByteBuffer.allocate(4).order(ByteOrder.nativeOrder());
+            buffer.putInt(node.getId());
+            byte[] nodeByte = buffer.array();
+            b[pos++] = nodeByte[1];
+            b[pos++] = nodeByte[0];
+        }
+        return "http://www.pathofexile.com/passive-skill-tree/" + Base64.encodeBase64String(b).replace("/", "_").replace("+", "-");
     }
 }
