@@ -4,7 +4,6 @@ import org.jgap.Gene;
 import org.jgap.IChromosome;
 import org.jgap.InvalidConfigurationException;
 import org.jgap.impl.IntegerGene;
-import org.jgap.util.ICloneable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +47,11 @@ public class Build {
                 if (!this.takenNodes.contains(potentialNode)) {
                     availableNodes.add(potentialNode);
                 }
+            }
+        }
+        for (Node node : this.tree.getStartNodesForClass("witch")) {
+            if (!this.takenNodes.contains(node)) {
+                availableNodes.add(node);
             }
         }
         return availableNodes;

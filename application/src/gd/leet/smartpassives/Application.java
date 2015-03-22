@@ -1,5 +1,6 @@
 package gd.leet.smartpassives;
 
+import gd.leet.smartpassives.model.Build;
 import gd.leet.smartpassives.model.Node;
 import gd.leet.smartpassives.model.ParsedSkillTree;
 import gd.leet.smartpassives.model.Tree;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Application {
     public int CHROMOSOME_LENGTH = 200;
@@ -52,7 +54,7 @@ public class Application {
 
     private static HashMap<String, Integer> getTargetStats() {
         HashMap<String, Integer> targetStats = new HashMap<String, Integer>();
-        targetStats.put("+ to Intelligence", 200);
+        targetStats.put("+ to Intelligence", 50);
         return targetStats;
     }
 
@@ -202,7 +204,6 @@ public class Application {
         List<Node> validNodes = PassiveTreeFitnessFunction.extractValidNodes(fittest, skillTree, "witch");
 
         System.out.println(PassiveTreeFitnessFunction.percentageOfStats(fittest, skillTree, "witch", getTargetStats()) + "% in " + validNodes.size() + " nodes");
-        System.out.println(PassiveTreeFitnessFunction.getActionsInOrder(fittest, skillTree));
         System.out.println(validNodes);
     }
 
@@ -226,11 +227,14 @@ public class Application {
     private Gene[] importInitialGenes(Configuration conf, Tree tree)
     {
         ArrayList<Gene> genes = new ArrayList<Gene>();
+        Build build = new Build(TREE);
         for (int i = 0; i < CHROMOSOME_LENGTH; i++)
             try
             {
-                IntegerGene g = new IntegerGene(conf, tree.getLowerBound(), tree.getUpperBound());
-                g.setAllele(0);
+                IntegerGene g = new IntegerGene(conf);
+                List<Node> availableNodes = build.getAvailableNodes();
+                Node toAdd = availableNodes.get(ThreadLocalRandom.current().nextInt(availableNodes.size()));
+                g.setAllele(TREE.getIdToIndex().get(toAdd.getId()));
                 genes.add(g);
             }
             catch (InvalidConfigurationException e)
