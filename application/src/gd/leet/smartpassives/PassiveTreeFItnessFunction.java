@@ -1,13 +1,11 @@
 package gd.leet.smartpassives;
 
+import gd.leet.smartpassives.model.Build;
 import gd.leet.smartpassives.model.Node;
 import gd.leet.smartpassives.model.Tree;
 import org.jgap.FitnessFunction;
-import org.jgap.Gene;
 import org.jgap.IChromosome;
-import org.jgap.impl.IntegerGene;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,35 +33,9 @@ public class PassiveTreeFitnessFunction extends FitnessFunction {
         return fitness;
     }
 
-    public static List<Node> getActionsInOrder(IChromosome iChromosome, Tree tree) {
-        List<Node> nodes = new ArrayList<Node>();
-        for (Gene gene1 : iChromosome.getGenes()) {
-            IntegerGene gene = (IntegerGene) gene1;
-            Integer passiveId = (Integer) gene.getAllele();
-            if (tree.getNodeMap().containsKey(passiveId)) {
-                nodes.add(tree.getNodeMap().get(passiveId));
-            }
-        }
-        return nodes;
-    }
-
     public static List<Node> extractValidNodes(IChromosome iChromosome, Tree tree, String _class) {
-        List<Node> nodes = new ArrayList<Node>();
-        List<Node> nodesToConsider = PassiveTreeFitnessFunction.getActionsInOrder(iChromosome, tree);
-        for (Node node : nodesToConsider) {
-            // we are looking for starting node
-            if (tree.getStartNodesForClass(_class).contains(node) && !nodes.contains(node)) {
-                nodes.add(node);
-            } else {
-                for (Node node2 : nodes) {
-                    if (node2.getConnections().contains(node) && !nodes.contains(node)) {
-                        nodes.add(node);
-                        break;
-                    }
-                }
-            }
-        }
-        return nodes;
+        Build build = new Build(tree, iChromosome);
+        return build.getTakenNodes();
     }
 
     public static HashMap<String, Integer> getStats(List<Node> nodes) {
